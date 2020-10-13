@@ -12,14 +12,14 @@ const HorseSchema = new Schema({
   mother: String,
   sex: {
     type: String,
-    enum: ["female", "male", "gelding"],
+    enum: ["Femelle", "Mâle", "Hongre"],
   },
   pictures: [String],
   phases: [
     {
       phaseName: {
         type: String,
-        enum: ["weaning", "breaking", "pre-training"],
+        enum: ["Cheval de selle", "Débourrage", "Pré-entrainement"],
       },
       arrivalDate: Date,
       departureDate: Date,
