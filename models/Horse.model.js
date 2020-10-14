@@ -15,8 +15,13 @@ const HorseSchema = new Schema({
     enum: ["Femelle", "Mâle", "Hongre"],
   },
   pictures: [String],
+  generalNotes: String,
   phases: [
     {
+      shortName:{
+        type: String,
+        enum: ["selle","breaking","pretraining"]
+      },
       phaseName: {
         type: String,
         enum: ["Cheval de selle", "Débourrage", "Pré-entrainement"],

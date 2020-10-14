@@ -52,10 +52,50 @@ router.post('/:userID/create', isLoggedIn, (req, res) => {
 })
 
 // Get the details of one horse
-// FULL ROUTE -> horses/:horsesID
+// FULL ROUTE -> horses/:horseID
 router.get('/onehorse/:horseID', isLoggedIn, (req, res) => {
   HorseModel.findById(req.params.horseID)
     .then((horse) => res.status(200).json(horse))
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: 'Something went wrong',
+        errorMessage: err
+      })
+    })
+})
+
+// Update the infos part for one horse
+// FULL ROUTE -> horses/onehorse/:horseID/infos/edit
+router.patch('/onehorse/:horseID/infos/edit', isLoggedIn, (req, res) => {
+  let updatedInfos = {}
+  Object.keys(req.body).forEach(key => {
+    if(req.body[key] !== "") updatedInfos[key] = req.body[key]
+  })
+  HorseModel.findByIdAndUpdate(req.params.horseID, {$set:updatedInfos})
+    .then((result) => res.status(200).json(result))
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: 'Something went wrong',
+        errorMessage: err
+      })
+    })
+})
+
+// Update one specific phase part for one horse
+// FULL ROUTE -> horses/onehorse/:horseID/:phaseShortName/edit
+router.patch('/onehorse/:horseID/:phaseShortName/edit', isLoggedIn, (req, res) =>{
+  console.log(req.body)
+  let id = req.params.horseID
+  let shortName = req.params.phaseShortName;
+  let updatedInfos = {}
+  Object.keys(req.body).forEach(key => {
+    if(req.body[key] !== "") updatedInfos[`phases.$.${key}`] = req.body[key];
+  })
+  console.log(updatedInfos)
+  HorseModel.update({_id: id, "phases.shortName": shortName}, {$set:{updatedInfos}})
+    .then((result) => res.status(200).json(result))
     .catch((err) => {
       console.log(err)
       res.status(500).json({
