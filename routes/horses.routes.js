@@ -51,4 +51,18 @@ router.post('/:userID/create', isLoggedIn, (req, res) => {
     })
 })
 
+// Get the details of one horse
+// FULL ROUTE -> horses/:horsesID
+router.get('/onehorse/:horseID', isLoggedIn, (req, res) => {
+  HorseModel.findById(req.params.horseID)
+    .then((horse) => res.status(200).json(horse))
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: 'Something went wrong',
+        errorMessage: err
+      })
+    })
+})
+
 module.exports = router;
