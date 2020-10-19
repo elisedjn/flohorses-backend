@@ -105,26 +105,25 @@ router.patch("/onehorse/:horseID/infos/edit", isLoggedIn, (req, res) => {
 });
 
 // Update one specific phase part for one horse
-// FULL ROUTE -> horses/onehorse/:horseID/:phaseShortName/edit
+// FULL ROUTE -> horses/onehorse/:horseID/phase/edit
 router.patch(
-  "/onehorse/:horseID/:phaseShortName/edit",
+  "/onehorse/:horseID/phase/edit",
   isLoggedIn,
   (req, res) => {
-    console.log(req.body);
     const id = req.params.horseID;
-    const shortName = req.params.phaseShortName;
-    const { arrivalDate, departureDate, phaseNotes } = req.body;
+    const { arrivalDate, departureDate, phaseNotes, active, phaseName } = req.body;
     HorseModel.findById(id)
       .then((horse) => {
         const horsePhases = horse.phases;
         let updatedPhases = [];
         horsePhases.forEach((phase, index) => {
           updatedPhases.push(phase);
-          if (phase.shortName === shortName) {
+          if (phase.phaseName === phaseName ) {
             if (arrivalDate) updatedPhases[index].arrivalDate = arrivalDate;
             if (departureDate)
               updatedPhases[index].departureDate = departureDate;
             if (phaseNotes) updatedPhases[index].phaseNotes = phaseNotes;
+            updatedPhases[index].active = active;
           }
         });
         HorseModel.findByIdAndUpdate(id, { $set: { phases: updatedPhases } })
@@ -152,7 +151,12 @@ router.patch(
 // Create a new phasee for one horse
 // FULL ROUTE -> horses/onehorse/:horseID/create
 router.patch('/onehorse/:horseID/create', isLoggedIn, (req, res) => {
-  HorseModel.findByIdAndUpdate(req.params.horseID, {$push : {phases : req.body}})
+  console.log(req.body)
+  let newPhase = JSON.parse(JSON.stringify(req.body))
+  if (newPhase.departureDate === '') delete newPhase.departureDate;
+  if (newPhase.arrivalDate === '') delete newPhase.arrivalDate;
+  console.log(newPhase)
+  HorseModel.findByIdAndUpdate(req.params.horseID, {$push : {phases : newPhase}})
     .then((result) => res.status(200).json(result))
     .catch((err) => {
       console.log(err);

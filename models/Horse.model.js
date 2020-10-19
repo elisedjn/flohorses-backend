@@ -20,15 +20,14 @@ const HorseSchema = new Schema({
     {
       shortName:{
         type: String,
-        enum: ["selle","breaking","pretraining"]
+        enum: ["selle","breaking","pretraining"],
+        required: true
       },
-      phaseName: {
-        type: String,
-        enum: ["Cheval de selle", "Débourrage", "Pré-entrainement"],
-      },
+      phaseName: String,
       arrivalDate: Date,
       departureDate: Date,
       phaseNotes: String,
+      active: Boolean,
     },
   ],
 });
