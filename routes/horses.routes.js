@@ -152,10 +152,10 @@ router.patch(
 
 // Update the images of a horse
 // FULL ROUTE -> horses/onehorse/:horseID/pictures
-router.patch('onehorse/:horseID/pictures', isLoggedIn, (req, res) => {
+router.patch('/onehorse/:horseID/pictures', isLoggedIn, (req, res) => {
   console.log(req.body);
   const updatedImages = req.body;
-  HorseModel.findByIdAndUpdate(req.params.horseID, {$set : {images: updatedImages}})
+  HorseModel.findByIdAndUpdate(req.params.horseID, {$set : {pictures: updatedImages}})
     .then((result) => res.status(200).json(result))
     .catch((err) => {
       console.log(err);
