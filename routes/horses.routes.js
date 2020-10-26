@@ -89,6 +89,7 @@ router.get("/onehorse/:horseID", isLoggedIn, (req, res) => {
 // Update the infos part for one horse
 // FULL ROUTE -> horses/onehorse/:horseID/infos/edit
 router.patch("/onehorse/:horseID/infos/edit", isLoggedIn, (req, res) => {
+  console.log("in infos Edit")
   let updatedInfos = {};
   Object.keys(req.body).forEach((key) => {
     if (req.body[key] !== "") updatedInfos[key] = req.body[key];
@@ -110,6 +111,7 @@ router.patch(
   "/onehorse/:horseID/phase/edit",
   isLoggedIn,
   (req, res) => {
+    console.log("in phase Edit")
     const id = req.params.horseID;
     const { arrivalDate, departureDate, phaseNotes, active, phaseName } = req.body;
     HorseModel.findById(id)
@@ -148,10 +150,26 @@ router.patch(
   }
 );
 
-// Create a new phasee for one horse
+// Update the images of a horse
+// FULL ROUTE -> horses/onehorse/:horseID/pictures
+router.patch('onehorse/:horseID/pictures', isLoggedIn, (req, res) => {
+  console.log(req.body);
+  const updatedImages = req.body;
+  HorseModel.findByIdAndUpdate(req.params.horseID, {$set : {images: updatedImages}})
+    .then((result) => res.status(200).json(result))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: "Something went wrong",
+        errorMessage: err,
+      });
+    });
+})
+
+// Create a new phase for one horse
 // FULL ROUTE -> horses/onehorse/:horseID/create
 router.patch('/onehorse/:horseID/create', isLoggedIn, (req, res) => {
-  console.log(req.body)
+  console.log("in phase create")
   let newPhase = JSON.parse(JSON.stringify(req.body))
   if (newPhase.departureDate === '') delete newPhase.departureDate;
   if (newPhase.arrivalDate === '') delete newPhase.arrivalDate;

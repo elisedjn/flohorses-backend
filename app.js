@@ -48,7 +48,10 @@ const horseRoutes = require('./routes/horses.routes');
 app.use('/api/horses', horseRoutes);
 
 const userRoutes = require('./routes/user.routes');
-app.use('/api/user', userRoutes)
+app.use('/api/user', userRoutes);
+
+const uploadRoutes = require('./routes/upload.routes');
+app.use('/api/upload', uploadRoutes);
 
 
 app.use((req, res, next) => {
