@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
+const UserModel = require("../models/User.model");
 
 const isLoggedIn = (req, res, next) => {
   if (req.session.loggedInUser) {
+    console.log(req.session.loggedInUser)
     next();
   } else {
     res.status(401).json({
@@ -10,6 +12,27 @@ const isLoggedIn = (req, res, next) => {
     });
   }
 };
+
+const isAuthorized = (req, res, next) => {
+  if(req.session.loggedInUser){
+    UserModel.findById(req.session.loggedInUser)
+      .then((user) => {
+        if(user.horses.includes(req.params.horseID)) {
+          next()
+        } else {
+          res.status(401).json({
+            errorMessage: "Unauthorized user, not his horse",
+            code: 401,
+          });
+        }
+      })
+  } else {
+    res.status(401).json({
+      errorMessage: "Unauthorized user",
+      code: 401,
+    });
+  }
+}
 
 const emailRegex = new RegExp(
   /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
@@ -68,4 +91,7 @@ module.exports = {
   signupVerifications,
   hashingPassword,
   loginVerifications,
+  isAuthorized,
+  unvalidEmail,
+  unvalidPassword
 };

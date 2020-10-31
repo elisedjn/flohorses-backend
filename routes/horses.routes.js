@@ -4,7 +4,7 @@ const router = express.Router();
 const HorseModel = require("../models/Horse.model");
 const UserModel = require("../models/User.model");
 
-const { isLoggedIn } = require("../helpers/auth-helpers");
+const { isLoggedIn, isAuthorized } = require("../helpers/auth-helpers");
 const { dataCleaning } = require("../helpers/horse-helpers");
 
 // Get all the horses from a user
@@ -74,7 +74,7 @@ router.post("/:userID/create", isLoggedIn, (req, res) => {
 
 // Get the details of one horse
 // FULL ROUTE -> horses/:horseID
-router.get("/onehorse/:horseID", isLoggedIn, (req, res) => {
+router.get("/onehorse/:horseID", isAuthorized, (req, res) => {
   HorseModel.findById(req.params.horseID)
     .then((horse) => res.status(200).json(horse))
     .catch((err) => {
@@ -88,7 +88,7 @@ router.get("/onehorse/:horseID", isLoggedIn, (req, res) => {
 
 // Update the infos part for one horse
 // FULL ROUTE -> horses/onehorse/:horseID/infos/edit
-router.patch("/onehorse/:horseID/infos/edit", isLoggedIn, (req, res) => {
+router.patch("/onehorse/:horseID/infos/edit", isAuthorized, (req, res) => {
   console.log("in infos Edit")
   let updatedInfos = {};
   Object.keys(req.body).forEach((key) => {
@@ -109,7 +109,7 @@ router.patch("/onehorse/:horseID/infos/edit", isLoggedIn, (req, res) => {
 // FULL ROUTE -> horses/onehorse/:horseID/phase/edit
 router.patch(
   "/onehorse/:horseID/phase/edit",
-  isLoggedIn,
+  isAuthorized,
   (req, res) => {
     console.log("in phase Edit")
     const id = req.params.horseID;
@@ -152,7 +152,7 @@ router.patch(
 
 // Update the images of a horse
 // FULL ROUTE -> horses/onehorse/:horseID/pictures
-router.patch('/onehorse/:horseID/pictures', isLoggedIn, (req, res) => {
+router.patch('/onehorse/:horseID/pictures', isAuthorized, (req, res) => {
   console.log(req.body);
   const updatedImages = req.body;
   HorseModel.findByIdAndUpdate(req.params.horseID, {$set : {pictures: updatedImages}})
@@ -168,7 +168,7 @@ router.patch('/onehorse/:horseID/pictures', isLoggedIn, (req, res) => {
 
 // Create a new phase for one horse
 // FULL ROUTE -> horses/onehorse/:horseID/create
-router.patch('/onehorse/:horseID/create', isLoggedIn, (req, res) => {
+router.patch('/onehorse/:horseID/create', isAuthorized, (req, res) => {
   console.log("in phase create")
   let newPhase = JSON.parse(JSON.stringify(req.body))
   if (newPhase.departureDate === '') delete newPhase.departureDate;
