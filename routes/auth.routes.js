@@ -68,14 +68,14 @@ router.post("/login", (req, res) => {
             res.status(200).json(userData);
           } else {
             res.status(500).json({
-              errorMessage: "Passwords don't match. Please try again",
+              errorMessage: "Mot de passe incorrect, merci de réessayer",
             });
             return;
           }
         })
         .catch(() => {
           res.status(500).json({
-            errorMessage: "Email format is not correct",
+            errorMessage: "Le format de l'email est incorrect",
           });
           return;
         });
@@ -83,7 +83,7 @@ router.post("/login", (req, res) => {
     //throw an error if the user does not exists
     .catch((err) => {
       res.status(500).json({
-        errorMessage: "This user does not exist. Please Sign Up first.",
+        errorMessage: "Cet utilisateur n'existe pas. Pensez à créer un compte avant de vous connecter.",
       });
       return;
     });

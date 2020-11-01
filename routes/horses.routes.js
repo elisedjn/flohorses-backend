@@ -37,6 +37,7 @@ router.post("/:userID/create", isLoggedIn, (req, res) => {
     mother,
     sex,
     pictures,
+    generalNotes
   } = req.body;
   HorseModel.create({
     name,
@@ -47,6 +48,7 @@ router.post("/:userID/create", isLoggedIn, (req, res) => {
     mother,
     sex,
     pictures,
+    generalNotes
   })
     .then((horse) => {
       UserModel.findByIdAndUpdate(req.params.userID, {
@@ -64,7 +66,6 @@ router.post("/:userID/create", isLoggedIn, (req, res) => {
         });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         error: "Something went wrong",
         errorMessage: err,

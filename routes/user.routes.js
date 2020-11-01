@@ -87,7 +87,15 @@ router.patch("/:userID", isLoggedIn, (req, res) => {
       } else {
         UserModel.findByIdAndUpdate(req.params.userID, { $set: updatedUser })
           .then((user) => res.status(200).json(user))
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err)
+            if(err.code === 11000 && "email" in err.keyPattern){
+              res.status(500).json({
+                errorMessage:
+                  "Cet email est déjà utilisé.",
+              });
+            }
+          });
       }
     })
     .catch((err) => console.log(err));
